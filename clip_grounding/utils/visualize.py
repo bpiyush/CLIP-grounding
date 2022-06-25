@@ -40,7 +40,7 @@ def show_single_image(image: np.ndarray, figsize: tuple = (8, 8), title: str = N
 def show_grid_of_images(
         images: np.ndarray, n_cols: int = 4, figsize: tuple = (8, 8),
         cmap=None, subtitles=None, title=None, subtitlesize=18,
-        save=False, save_path=None,
+        save=False, save_path=None, titlesize=20,
     ):
     """Show a grid of images."""
     n_cols = min(n_cols, len(images))
@@ -64,7 +64,7 @@ def show_grid_of_images(
             ax.set_title(subtitles[i], fontsize=subtitlesize)
             ax.axis('off')
     fig.set_tight_layout(True)
-    plt.suptitle(title, y=0.8)
+    plt.suptitle(title, y=0.8, fontsize=titlesize)
 
     if save:
         plt.savefig(save_path, bbox_inches='tight')
