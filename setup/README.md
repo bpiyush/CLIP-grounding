@@ -13,5 +13,5 @@
     pip install ftfy
     pip install captum
     pip install torch torchvision
-    pip install ipdb jupyterlab matplotlib numpy scipy scikit-learn tqdm natsort opencv-python pillow pyyaml
+    pip install ipdb jupyterlab matplotlib numpy scipy scikit-learn tqdm natsort opencv-python pillow pyyaml scikit-image
     ```
