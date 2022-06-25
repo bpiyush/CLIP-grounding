@@ -6,7 +6,7 @@ Evaluating interpretability of CLIP in terms of grounding.
 
 1. Download the MSCOCO dataset (only validation images are required for this work) and its panoptic segmentation annotations by running:
     ```console
-    bash setup/download_mscoco.sh
+    $ bash setup/download_mscoco.sh
     ```
 
     This shall result in the following folder structure:
