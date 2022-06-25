@@ -1,4 +1,3 @@
-
 import torch
 import CLIP.clip as clip
 from PIL import Image
@@ -100,6 +99,8 @@ def show_image_relevance(image_relevance, image, orig_image):
     axs[1].axis('off');
     # plt.imshow(vis)
 
+    return image_relevance
+
 
 def show_heatmap_on_text(text, text_encoding, R_text):
     CLS_idx = text_encoding.argmax(dim=-1)
@@ -111,3 +112,13 @@ def show_heatmap_on_text(text, text_encoding, R_text):
     text_tokens_decoded=[_tokenizer.decode([a]) for a in text_tokens]
     vis_data_records = [visualization.VisualizationDataRecord(text_scores,0,0,0,0,0,text_tokens_decoded,1)]
     visualization.visualize_text(vis_data_records)
+
+    return text_scores
+
+
+def show_img_heatmap(image_relevance, image, orig_image):
+    return show_image_relevance(image_relevance, image, orig_image)
+
+
+def show_txt_heatmap(text, text_encoding, R_text):
+    return show_heatmap_on_text(text, text_encoding, R_text)
