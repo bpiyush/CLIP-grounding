@@ -24,4 +24,40 @@ Evaluating interpretability of CLIP in terms of grounding.
 
     6 directories, 3 files
     ```
+2. Pre-process the data as instructed in the [official panoptic narrative grounding repo](https://github.com/BCV-Uniandes/PNG). See [Appendix A](#appA) for sample instructions to run this on a Mac CPU machine. This shall create `data/panoptic_narrative_grounding/annotations/png_coco_val2017_dataloader.json` file. Note that we run this step only for `val2017` split and not the training set.
 
+
+
+
+
+
+## Appendix
+
+### A. Pre-processing data based on Panoptic Narrative Grounding <a class="anchor" id="appA"></a>
+
+* Clone the repo [PNG](https://github.com/BCV-Uniandes/PNG)
+* Create `conda` environment and install dependencies:
+    ```sh
+    conda create -n png -y python=3.6
+    conda activate png
+
+    pip install torch==1.7.1 torchvision==0.8.2 torchaudio==0.7.2
+    pip install tqdm scipy
+
+    # This failed initially on Mac and needed
+    # `brew install mpich` to be run before this
+    pip install mpi4py
+    pip install scikit-image
+    pip install boto3 requests
+    ```
+* Change the script to only run for `val2017` split: Change line 34 in `data/pre_process.py` as:
+    ```python
+    # splits = ["train2017", "val2017"]
+    splits = ["val2017"]
+    ```
+* Run the script:
+    ```sh
+    cd data/
+    python pre_process.py --data_dir /path/to/CLIP-grounding/repo/data/panoptic_narrative_grounding/
+    ```
+    This step takes about 10 minutes to run (only for `val2017` split).
