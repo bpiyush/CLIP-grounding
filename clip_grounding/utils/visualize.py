@@ -58,7 +58,7 @@ def show_grid_of_images(
     fig, axes = plt.subplots(n_rows, n_cols, figsize=figsize)
     for i, ax in enumerate(axes.flat):
         if i < len(images):
-            if len(images[i].shape) == 2:
+            if len(images[i].shape) == 2 and cmap is None:
                 cmap="gray"
             ax.imshow(images[i], cmap=cmap)
             ax.set_title(subtitles[i], fontsize=subtitlesize)

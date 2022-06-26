@@ -15,4 +15,7 @@
     pip install torch torchvision
     pip install ipdb jupyterlab matplotlib numpy scipy scikit-learn tqdm natsort opencv-python pillow pyyaml scikit-image imgaug
     pip install ipywidgets widgetsnbextension pandas-profiling
+    pip install ftfy regex captum
+    pip install torchmetrics
     ```
+3. Clone repo for [Transformer-MM-Explanability](git@github.com:hila-chefer/Transformer-MM-Explainability.git)

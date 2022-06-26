@@ -28,7 +28,7 @@ def interpret(image, texts, model, device):
     one_hot = np.zeros((logits_per_image.shape[0], logits_per_image.shape[1]), dtype=np.float32)
     one_hot[torch.arange(logits_per_image.shape[0]), index] = 1
     one_hot = torch.from_numpy(one_hot).requires_grad_(True)
-    one_hot = torch.sum(one_hot.cuda() * logits_per_image)
+    one_hot = torch.sum(one_hot.to(device) * logits_per_image)
     model.zero_grad()
 
     image_attn_blocks = list(dict(model.visual.transformer.resblocks.named_children()).values())
@@ -69,7 +69,7 @@ def interpret(image, texts, model, device):
     return text_relevance, image_relevance
 
 
-def show_image_relevance(image_relevance, image, orig_image):
+def show_image_relevance(image_relevance, image, orig_image, device):
     # create heatmap from mask on image
     def show_cam_on_image(img, mask):
         heatmap = cv2.applyColorMap(np.uint8(255 * mask), cv2.COLORMAP_JET)
@@ -88,7 +88,7 @@ def show_image_relevance(image_relevance, image, orig_image):
 
     image_relevance = image_relevance.reshape(1, 1, 7, 7)
     image_relevance = torch.nn.functional.interpolate(image_relevance, size=224, mode='bilinear')
-    image_relevance = image_relevance.reshape(224, 224).cuda().data.cpu().numpy()
+    image_relevance = image_relevance.reshape(224, 224).to(device).data.cpu().numpy()
     image_relevance = (image_relevance - image_relevance.min()) / (image_relevance.max() - image_relevance.min())
     image = image[0].permute(1, 2, 0).data.cpu().numpy()
     image = (image - image.min()) / (image.max() - image.min())
@@ -108,7 +108,7 @@ def show_heatmap_on_text(text, text_encoding, R_text):
     R_text = R_text[CLS_idx, 1:CLS_idx]
     text_scores = R_text / R_text.sum()
     text_scores = text_scores.flatten()
-    print(text_scores)
+    # print(text_scores)
     text_tokens=_tokenizer.encode(text)
     text_tokens_decoded=[_tokenizer.decode([a]) for a in text_tokens]
     vis_data_records = [visualization.VisualizationDataRecord(text_scores,0,0,0,0,0,text_tokens_decoded,1)]
@@ -117,8 +117,8 @@ def show_heatmap_on_text(text, text_encoding, R_text):
     return text_scores
 
 
-def show_img_heatmap(image_relevance, image, orig_image):
-    return show_image_relevance(image_relevance, image, orig_image)
+def show_img_heatmap(image_relevance, image, orig_image, device):
+    return show_image_relevance(image_relevance, image, orig_image, device)
 
 
 def show_txt_heatmap(text, text_encoding, R_text):
@@ -133,3 +133,15 @@ def load_dataset():
 
     return data
 
+
+class color:
+    PURPLE = '\033[95m'
+    CYAN = '\033[96m'
+    DARKCYAN = '\033[36m'
+    BLUE = '\033[94m'
+    GREEN = '\033[92m'
+    YELLOW = '\033[93m'
+    RED = '\033[91m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+    END = '\033[0m'
