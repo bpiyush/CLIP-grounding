@@ -192,5 +192,5 @@ if __name__ == "__main__":
         text=sub_item["text"],
         image_mask=sub_item["image_mask"],
         text_mask=sub_item["text_mask"],
-        segment_color="red"
+        segment_color="red",
     )
