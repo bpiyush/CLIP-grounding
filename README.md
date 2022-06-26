@@ -66,3 +66,6 @@ Follow the steps provided [here](./setup/README.md) to create a `conda` envirome
     python pre_process.py --data_dir /path/to/CLIP-grounding/repo/data/panoptic_narrative_grounding/
     ```
     This step takes about 10 minutes to run (only for `val2017` split).
+
+
+## Acknowledgements
