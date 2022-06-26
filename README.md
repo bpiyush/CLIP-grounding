@@ -33,7 +33,7 @@ Follow the steps provided [here](./setup/README.md) to create a `conda` envirome
 
 ## Demo
 
-:soon: Coming soon!
+:date:  Coming soon!
 
 
 ## Appendix
