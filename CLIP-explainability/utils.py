@@ -5,6 +5,7 @@ import numpy as np
 import cv2
 import matplotlib.pyplot as plt
 from captum.attr import visualization
+import os
 
 
 from CLIP.clip.simple_tokenizer import SimpleTokenizer as _Tokenizer
@@ -122,3 +123,13 @@ def show_img_heatmap(image_relevance, image, orig_image):
 
 def show_txt_heatmap(text, text_encoding, R_text):
     return show_heatmap_on_text(text, text_encoding, R_text)
+
+
+def load_dataset():
+    dataset_path = os.path.join('..', '..', 'dummy-data', '71226_segments' + '.pt')
+    device = "cuda" if torch.cuda.is_available() else "cpu"
+
+    data = torch.load(dataset_path, map_location=device)
+
+    return data
+
