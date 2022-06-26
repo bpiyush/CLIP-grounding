@@ -28,7 +28,7 @@ Follow the steps provided [here](./setup/README.md) to create a `conda` envirome
 
     6 directories, 3 files
     ```
-2. Pre-process the data as instructed in the [official panoptic narrative grounding repo](https://github.com/BCV-Uniandes/PNG). See [Appendix A](#appA) for sample instructions to run this on a Mac CPU machine. This shall create `data/panoptic_narrative_grounding/annotations/png_coco_val2017_dataloader.json` file. Note that we run this step only for `val2017` split and not the training set.
+2. (Optional) Pre-process the data as instructed in the [official panoptic narrative grounding repo](https://github.com/BCV-Uniandes/PNG). See [Appendix A](#appA) for sample instructions to run this on a Mac CPU machine. This shall create `data/panoptic_narrative_grounding/annotations/png_coco_val2017_dataloader.json` file. Note that we run this step only for `val2017` split and not the training set.
 
 
 

@@ -43,7 +43,7 @@ class PNG(Dataset):
         self.split = split
         
         self.ann_dir = join(self.dataset_root, "annotations")
-        feat_dir = join(self.dataset_root, "features")
+        # feat_dir = join(self.dataset_root, "features")
         
         panoptic = load_json(join(self.ann_dir, "panoptic_{:s}.json".format(split)))
         images = panoptic["images"]
@@ -51,10 +51,10 @@ class PNG(Dataset):
         panoptic_anns = panoptic["annotations"]
         self.panoptic_anns = {int(a["image_id"]): a for a in panoptic_anns}
         
-        self.panoptic_pred_path = join(
-            feat_dir, split, "panoptic_seg_predictions"
-        )
-        assert isdir(self.panoptic_pred_path)
+        # self.panoptic_pred_path = join(
+        #     feat_dir, split, "panoptic_seg_predictions"
+        # )
+        # assert isdir(self.panoptic_pred_path)
                 
         panoptic_narratives_path = join(self.dataset_root, "annotations", f"png_coco_{split}.json")
         self.panoptic_narratives = load_json(panoptic_narratives_path)
@@ -87,7 +87,6 @@ class PNG(Dataset):
         for s in panoptic_ann["segments_info"]:
             idi = s["id"]
             segment_infos[idi] = s
-
             
         image_info = self.images_info[image_id]
         panoptic_segm = io.imread(
@@ -105,9 +104,9 @@ class PNG(Dataset):
         )
 
         panoptic_ann = self.panoptic_anns[image_id]
-        panoptic_pred = io.imread(
-            join(self.panoptic_pred_path, "{:012d}.png".format(image_id))
-        )[:, :, 0]
+        # panoptic_pred = io.imread(
+        #     join(self.panoptic_pred_path, "{:012d}.png".format(image_id))
+        # )[:, :, 0]
 
 
         # # select a single utterance to visualize
