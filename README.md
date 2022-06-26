@@ -2,6 +2,10 @@
 Evaluating interpretability of CLIP in terms of grounding.
 
 
+## Setup
+
+Follow the steps provided [here](./setup/README.md) to create a `conda` enviroment and activate it.
+
 ## Dataset
 
 1. Download the MSCOCO dataset (only validation images are required for this work) and its panoptic segmentation annotations by running:

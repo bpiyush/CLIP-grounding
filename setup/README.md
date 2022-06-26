@@ -18,4 +18,8 @@
     pip install ftfy regex captum
     pip install torchmetrics
     ```
-3. Clone repo for [Transformer-MM-Explanability](git@github.com:hila-chefer/Transformer-MM-Explainability.git)
+3. Clone repo for [Transformer-MM-Explanability](https://github.com/hila-chefer/Transformer-MM-Explainability) inside the `CLIP_explainability/` folder.
+    ```sh
+    cd CLIP_explainability/
+    git clone https://github.com/hila-chefer/Transformer-MM-Explainability.git
+    ```
