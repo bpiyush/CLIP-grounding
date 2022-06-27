@@ -1,5 +1,5 @@
 # CLIP-grounding
-Evaluating interpretability of CLIP in terms of grounding.
+Quantitative evaluation of CLIP's interpretability in terms of cross-modal grounding.
 
 
 ## Setup
