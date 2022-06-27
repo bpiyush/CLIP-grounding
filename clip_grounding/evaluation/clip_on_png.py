@@ -136,7 +136,12 @@ def evaluate_text_to_image(dataset, debug=False):
 
 
 def process_entry_image_to_text(entry):
-    mask = np.repeat(np.expand_dims(entry['image_mask'], -1), 3, axis=-1)
+    
+    if len(np.asarray(entry["image"]).shape) == 3:
+        mask = np.repeat(np.expand_dims(entry['image_mask'], -1), 3, axis=-1)
+    else:
+        mask = np.asarray(entry['image_mask'])
+
     masked_image = (mask * np.asarray(entry['image'])).astype(np.uint8)
     masked_image = Image.fromarray(masked_image)
     texts = [' '.join(entry['text'])]
@@ -181,7 +186,6 @@ def evaluate_image_to_text(dataset, debug=False, clamp_sentence_len=70):
     iterator = tqdm_iterator(range(num_iter), desc=f"Evaluating on {type(dataset).__name__} dataset")
     for idx in iterator:
         instance = dataset[idx]
-        instance_skipped = False
         
         instance_iou = 0.
         for entry in instance:
@@ -198,7 +202,11 @@ def evaluate_image_to_text(dataset, debug=False, clamp_sentence_len=70):
                 continue
             
             # compute the relevance scores 
-            outputs = interpret_and_generate(model, img, texts, orig_image, return_outputs=True, show=False)
+            try:
+                outputs = interpret_and_generate(model, img, texts, orig_image, return_outputs=True, show=False)
+            except:
+                num_entries_skipped += 1
+                continue
             
             # use the text relevance score to compute IoU w.r.t. ground truth text masks
             # NOTE: since we pass single entry (1-sized batch), outputs[0] contains our reqd outputs
