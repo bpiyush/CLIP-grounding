@@ -4,10 +4,9 @@ import os
 import sys
 from os.path import join
 
-from clip_grounding.utils.paths import REPO_PATH
-sys.path.append(join(REPO_PATH, "CLIP_explainability/Transformer-MM-Explainability/"))
+import warnings
+warnings.filterwarnings('ignore')
 
-from os.path import join
 import torch
 import CLIP.clip as clip
 from PIL import Image
@@ -15,13 +14,13 @@ import numpy as np
 import cv2
 import matplotlib.pyplot as plt
 from captum.attr import visualization
-import warnings
 from torchmetrics import JaccardIndex
 from collections import defaultdict
 from IPython.core.display import display, HTML
 from skimage import filters
 
-warnings.filterwarnings('ignore')
+from clip_grounding.utils.paths import REPO_PATH
+sys.path.append(join(REPO_PATH, "CLIP_explainability/Transformer-MM-Explainability/"))
 
 from CLIP_explainability.utils import interpret, show_img_heatmap, show_txt_heatmap, color, _tokenizer
 from clip_grounding.datasets.png import PNG
@@ -250,7 +249,7 @@ if __name__ == "__main__":
     
     # evaluate
     print_update("Computing metrics for text-to-image grounding")
-    average_metrics, instance_level_metrics, entry_level_metrics = evaluate_text_to_image(dataset, debug=True)
+    average_metrics, instance_level_metrics, entry_level_metrics = evaluate_text_to_image(dataset, debug=False)
     # save metrics
     metrics_dir = join(REPO_PATH, "outputs")
     os.makedirs(metrics_dir, exist_ok=True)
@@ -269,7 +268,7 @@ if __name__ == "__main__":
     print()
     
     print_update("Computing metrics for image-to-text grounding")
-    average_metrics, instance_level_metrics, entry_level_metrics = evaluate_image_to_text(dataset, debug=True)
+    average_metrics, instance_level_metrics, entry_level_metrics = evaluate_image_to_text(dataset, debug=False)
     metrics_path = join(metrics_dir, f"{type(model).__name__}_on_{type(dataset).__name__}_image2text_metrics.pt")
     torch.save(
         {
