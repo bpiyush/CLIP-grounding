@@ -17,6 +17,7 @@
     pip install ipywidgets widgetsnbextension pandas-profiling
     pip install ftfy regex captum
     pip install torchmetrics
+    pip install termcolor
     ```
 3. Clone repo for [Transformer-MM-Explanability](https://github.com/hila-chefer/Transformer-MM-Explainability) inside the `CLIP_explainability/` folder.
     ```sh

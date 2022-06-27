@@ -69,7 +69,7 @@ def interpret(image, texts, model, device):
     return text_relevance, image_relevance
 
 
-def show_image_relevance(image_relevance, image, orig_image, device):
+def show_image_relevance(image_relevance, image, orig_image, device, show=True):
     # create heatmap from mask on image
     def show_cam_on_image(img, mask):
         heatmap = cv2.applyColorMap(np.uint8(255 * mask), cv2.COLORMAP_JET)
@@ -81,10 +81,11 @@ def show_image_relevance(image_relevance, image, orig_image, device):
     # plt.axis('off')
     # f, axarr = plt.subplots(1,2)
     # axarr[0].imshow(orig_image)
-
-    fig, axs = plt.subplots(1, 2)
-    axs[0].imshow(orig_image);
-    axs[0].axis('off');
+    
+    if show:
+        fig, axs = plt.subplots(1, 2)
+        axs[0].imshow(orig_image);
+        axs[0].axis('off');
 
     image_relevance = image_relevance.reshape(1, 1, 7, 7)
     image_relevance = torch.nn.functional.interpolate(image_relevance, size=224, mode='bilinear')
@@ -95,15 +96,17 @@ def show_image_relevance(image_relevance, image, orig_image, device):
     vis = show_cam_on_image(image, image_relevance)
     vis = np.uint8(255 * vis)
     vis = cv2.cvtColor(np.array(vis), cv2.COLOR_RGB2BGR)
-    # axar[1].imshow(vis)
-    axs[1].imshow(vis);
-    axs[1].axis('off');
-    # plt.imshow(vis)
+
+    if show:
+        # axar[1].imshow(vis)
+        axs[1].imshow(vis);
+        axs[1].axis('off');
+        # plt.imshow(vis)
 
     return image_relevance
 
 
-def show_heatmap_on_text(text, text_encoding, R_text):
+def show_heatmap_on_text(text, text_encoding, R_text, show=True):
     CLS_idx = text_encoding.argmax(dim=-1)
     R_text = R_text[CLS_idx, 1:CLS_idx]
     text_scores = R_text / R_text.sum()
@@ -112,17 +115,19 @@ def show_heatmap_on_text(text, text_encoding, R_text):
     text_tokens=_tokenizer.encode(text)
     text_tokens_decoded=[_tokenizer.decode([a]) for a in text_tokens]
     vis_data_records = [visualization.VisualizationDataRecord(text_scores,0,0,0,0,0,text_tokens_decoded,1)]
-    visualization.visualize_text(vis_data_records)
+    
+    if show:
+        visualization.visualize_text(vis_data_records)
 
-    return text_scores
-
-
-def show_img_heatmap(image_relevance, image, orig_image, device):
-    return show_image_relevance(image_relevance, image, orig_image, device)
+    return text_scores, text_tokens_decoded
 
 
-def show_txt_heatmap(text, text_encoding, R_text):
-    return show_heatmap_on_text(text, text_encoding, R_text)
+def show_img_heatmap(image_relevance, image, orig_image, device, show=True):
+    return show_image_relevance(image_relevance, image, orig_image, device, show=show)
+
+
+def show_txt_heatmap(text, text_encoding, R_text, show=True):
+    return show_heatmap_on_text(text, text_encoding, R_text, show=show)
 
 
 def load_dataset():
