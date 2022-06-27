@@ -1,6 +1,7 @@
 # Data
 data/
 __MACOSX/
+*metrics.pt
 
 
 # Byte-compiled / optimized / DLL files

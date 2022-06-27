@@ -36,6 +36,25 @@ Follow the steps provided [here](./setup/README.md) to create a `conda` envirome
 :date:  Coming soon!
 
 
+## Quantitative evaluation
+
+In order to reproduce our results of CLIP model on Panoptic Narrative Grounding (PNG) benchmark dataset, we use the following procedure:
+* Activate `conda` enviroment and set `PYTHONPATH`. Make sure you are at the repo root.
+    ```sh
+    conda activate clip-grounding
+    export PYTHONPATH=$PWD
+    ```
+* Run the evaluation script:
+    ```sh
+    python clip_grounding/evaluation/clip_on_png.py
+    ```
+    This shall save metrics in `outputs/` folder as well as print the results in the following form.
+    ```console
+    TEXT2IMAGE METRICS: {'iou': 0.4892}
+    IMAGE2TEXT METRICS: {'iou': 0.5015}
+    ```
+
+
 ## Appendix
 
 ### A. Pre-processing data based on Panoptic Narrative Grounding <a class="anchor" id="appA"></a>
