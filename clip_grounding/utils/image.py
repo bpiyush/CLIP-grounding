@@ -24,6 +24,13 @@ def pad_to_square(im: Image, color=(0, 0, 0)):
     vert_pad = (max(width, height) - height) // 2
     hor_pad = (max(width, height) - width) // 2
     
+    if len(im.mode) == 3:
+        color = (0, 0, 0)
+    elif len(im.mode) == 1:
+        color = 0
+    else:
+        raise ValueError(f"Image mode not supported. Image has {im.mode} channels.")
+    
     return add_margin(im, vert_pad, hor_pad, vert_pad, hor_pad, color=color)
 
 

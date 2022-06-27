@@ -2,10 +2,13 @@
 
 import os
 import sys
-from os.path import join
+from os.path import join, exists
 
 import warnings
 warnings.filterwarnings('ignore')
+
+from clip_grounding.utils.paths import REPO_PATH
+sys.path.append(join(REPO_PATH, "CLIP_explainability/Transformer-MM-Explainability/"))
 
 import torch
 import CLIP.clip as clip
@@ -18,9 +21,6 @@ from torchmetrics import JaccardIndex
 from collections import defaultdict
 from IPython.core.display import display, HTML
 from skimage import filters
-
-from clip_grounding.utils.paths import REPO_PATH
-sys.path.append(join(REPO_PATH, "CLIP_explainability/Transformer-MM-Explainability/"))
 
 from CLIP_explainability.utils import interpret, show_img_heatmap, show_txt_heatmap, color, _tokenizer
 from clip_grounding.datasets.png import PNG
@@ -248,35 +248,47 @@ if __name__ == "__main__":
     print()
     
     # evaluate
-    print_update("Computing metrics for text-to-image grounding")
-    average_metrics, instance_level_metrics, entry_level_metrics = evaluate_text_to_image(dataset, debug=False)
+
     # save metrics
     metrics_dir = join(REPO_PATH, "outputs")
     os.makedirs(metrics_dir, exist_ok=True)
     metrics_path = join(metrics_dir, f"{type(model).__name__}_on_{type(dataset).__name__}_text2image_metrics.pt")
-    torch.save(
-        {
+
+    if not exists(metrics_path):
+        print_update("Computing metrics for text-to-image grounding")
+        average_metrics, instance_level_metrics, entry_level_metrics = evaluate_text_to_image(dataset, debug=False)
+        metrics = {
             "average_metrics": average_metrics,
             "instance_level_metrics":instance_level_metrics,
             "entry_level_metrics": entry_level_metrics
-        },
-        metrics_path,
-    )
-    print("TEXT2IMAGE METRICS SAVED TO:", metrics_path)
-    print("TEXT2IMAGE METRICS:", np.round(average_metrics, 4))
+        }
+
+        torch.save(metrics, metrics_path)
+        print("TEXT2IMAGE METRICS SAVED TO:", metrics_path)
+    else:
+        print(f"Metrics already exist at: {metrics_path}. Loading cached metrics.")
+        metrics = torch.load(metrics_path)
+        average_metrics = metrics["average_metrics"]
+    print("TEXT2IMAGE METRICS:", np.round(average_metrics["iou"], 4))
 
     print()
     
-    print_update("Computing metrics for image-to-text grounding")
-    average_metrics, instance_level_metrics, entry_level_metrics = evaluate_image_to_text(dataset, debug=False)
     metrics_path = join(metrics_dir, f"{type(model).__name__}_on_{type(dataset).__name__}_image2text_metrics.pt")
-    torch.save(
-        {
-            "average_metrics": average_metrics,
-            "instance_level_metrics":instance_level_metrics,
-            "entry_level_metrics": entry_level_metrics
-        },
-        metrics_path,
-    )
-    print("IMAGE2TEXT METRICS SAVED TO:", metrics_path)
-    print("IMAGE2TEXT METRICS:", np.round(average_metrics, 4))
+    if not exists(metrics_path):
+        print_update("Computing metrics for image-to-text grounding")
+        average_metrics, instance_level_metrics, entry_level_metrics = evaluate_image_to_text(dataset, debug=False)
+        
+        torch.save(
+            {
+                "average_metrics": average_metrics,
+                "instance_level_metrics":instance_level_metrics,
+                "entry_level_metrics": entry_level_metrics
+            },
+            metrics_path,
+        )
+        print("IMAGE2TEXT METRICS SAVED TO:", metrics_path)
+    else:
+        print(f"Metrics already exist at: {metrics_path}. Loading cached metrics.")
+        metrics = torch.load(metrics_path)
+        average_metrics = metrics["average_metrics"]
+    print("IMAGE2TEXT METRICS:", np.round(average_metrics["iou"], 4))
