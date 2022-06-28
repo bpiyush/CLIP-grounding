@@ -8,7 +8,7 @@ Follow the steps provided [here](./setup/README.md) to create a `conda` envirome
 
 ## Dataset
 
-1. Download the MSCOCO dataset (only validation images are required for this work) and its panoptic segmentation annotations by running:
+Download the MSCOCO dataset (only validation images are required for this work) and its panoptic segmentation annotations by running:
     ```console
     bash setup/download_mscoco.sh
     ```
@@ -28,7 +28,7 @@ Follow the steps provided [here](./setup/README.md) to create a `conda` envirome
 
     6 directories, 3 files
     ```
-2. (Optional) Pre-process the data as instructed in the [official panoptic narrative grounding repo](https://github.com/BCV-Uniandes/PNG). See [Appendix A](#appA) for sample instructions to run this on a Mac CPU machine. This shall create `data/panoptic_narrative_grounding/annotations/png_coco_val2017_dataloader.json` file. Note that we run this step only for `val2017` split and not the training set.
+<!-- 2. (Optional) Pre-process the data as instructed in the [official panoptic narrative grounding repo](https://github.com/BCV-Uniandes/PNG). See [Appendix A](#appA) for sample instructions to run this on a Mac CPU machine. This shall create `data/panoptic_narrative_grounding/annotations/png_coco_val2017_dataloader.json` file. Note that we run this step only for `val2017` split and not the training set. -->
 
 
 ## Demo
@@ -79,7 +79,7 @@ The cross-modal grounding results for different variants are summarized in the f
 </center>
 
 
-## Appendix
+<!-- ## Appendix
 
 ### A. Pre-processing data based on Panoptic Narrative Grounding <a class="anchor" id="appA"></a>
 
@@ -108,7 +108,7 @@ The cross-modal grounding results for different variants are summarized in the f
     cd data/
     python pre_process.py --data_dir /path/to/CLIP-grounding/repo/data/panoptic_narrative_grounding/
     ```
-    This step takes about 10 minutes to run (only for `val2017` split).
+    This step takes about 10 minutes to run (only for `val2017` split). -->
 
 
 ## Acknowledgements
