@@ -54,7 +54,7 @@ def interpret_and_generate(model, img, texts, orig_image, return_outputs=False, 
         return outputs
 
 
-def process_entry_text_to_image(entry):
+def process_entry_text_to_image(entry, unimodal=False):
     image = entry['image']
     text_mask = entry['text_mask']
     text = entry['text']
@@ -62,7 +62,7 @@ def process_entry_text_to_image(entry):
     
     img = preprocess(orig_image).unsqueeze(0).to(device)
     text_index = text_mask.argmax()
-    texts = [text[text_index]]
+    texts = [text[text_index]] if not unimodal else ['']
     
     return img, texts, orig_image
 
@@ -101,9 +101,10 @@ def evaluate_text_to_image(method, dataset, debug=False):
         for entry in instance:
             
             # preprocess the image and text
-            test_img, test_texts, orig_image = process_entry_text_to_image(entry)
+            unimodal = True if method == "clip-unimodal" else False
+            test_img, test_texts, orig_image = process_entry_text_to_image(entry, unimodal=unimodal)
 
-            if method == "clip":
+            if method in ["clip", "clip-unimodal"]:
                 
                 # compute the relevance scores 
                 outputs = interpret_and_generate(model, test_img, test_texts, orig_image, return_outputs=True, show=False)
@@ -141,19 +142,26 @@ def evaluate_text_to_image(method, dataset, debug=False):
     )
 
 
-def process_entry_image_to_text(entry):
+def process_entry_image_to_text(entry, unimodal=False):
     
-    if len(np.asarray(entry["image"]).shape) == 3:
-        mask = np.repeat(np.expand_dims(entry['image_mask'], -1), 3, axis=-1)
-    else:
-        mask = np.asarray(entry['image_mask'])
+    if not unimodal:
+        if len(np.asarray(entry["image"]).shape) == 3:
+            mask = np.repeat(np.expand_dims(entry['image_mask'], -1), 3, axis=-1)
+        else:
+            mask = np.asarray(entry['image_mask'])
 
-    masked_image = (mask * np.asarray(entry['image'])).astype(np.uint8)
-    masked_image = Image.fromarray(masked_image)
-    texts = [' '.join(entry['text'])]
-    orig_image = pad_to_square(masked_image)
-    img = preprocess(orig_image).unsqueeze(0).to(device)
+        masked_image = (mask * np.asarray(entry['image'])).astype(np.uint8)
+        masked_image = Image.fromarray(masked_image)
+        orig_image = pad_to_square(masked_image)
+        img = preprocess(orig_image).unsqueeze(0).to(device)
+    else:
+        orig_image_shape = max(np.asarray(entry['image']).shape[:2])
+        orig_image = Image.fromarray(np.zeros((orig_image_shape, orig_image_shape, 3), dtype=np.uint8))
+        # orig_image = Image.fromarray(np.random.randint(0, 256, (orig_image_shape, orig_image_shape, 3), dtype=np.uint8))
+        img = preprocess(orig_image).unsqueeze(0).to(device)
     
+    texts = [' '.join(entry['text'])]
+
     return img, texts, orig_image
 
 
@@ -198,7 +206,8 @@ def evaluate_image_to_text(method, dataset, debug=False, clamp_sentence_len=70):
             num_total_entries += 1
             
             # preprocess the image and text
-            img, texts, orig_image = process_entry_image_to_text(entry)
+            unimodal = True if method == "clip-unimodal" else False
+            img, texts, orig_image = process_entry_image_to_text(entry, unimodal=unimodal)
 
             appx_total_sent_len = np.sum([len(x.split(" ")) for x in texts])
             if appx_total_sent_len > clamp_sentence_len:
@@ -208,7 +217,7 @@ def evaluate_image_to_text(method, dataset, debug=False, clamp_sentence_len=70):
                 continue
             
             # compute the relevance scores 
-            if method == "clip":
+            if method in ["clip", "clip-unimodal"]:
                 try:
                     outputs = interpret_and_generate(model, img, texts, orig_image, return_outputs=True, show=False)
                 except:
@@ -261,14 +270,20 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser("Evaluate Image-to-Text & Text-to-Image model")
     parser.add_argument(
         "--eval_method", type=str, default="clip",
-        choices=["clip", "random"],
+        choices=["clip", "random", "clip-unimodal"],
         help="Evaluation method to use",
     )
     parser.add_argument(
         "--ignore_cache", action="store_true",
         help="Ignore cache and force re-generation of the results",
     )
+    parser.add_argument(
+        "--debug", action="store_true",
+        help="Run evaluation on a small subset of the dataset",
+    )
     args = parser.parse_args()
+    
+    print_update("Using evaluation method: {}".format(args.eval_method))
     
     
     clip.clip._MODELS = {
@@ -299,7 +314,7 @@ if __name__ == "__main__":
     if (not exists(metrics_path)) or args.ignore_cache:
         print_update("Computing metrics for text-to-image grounding")
         average_metrics, instance_level_metrics, entry_level_metrics = evaluate_text_to_image(
-            args.eval_method, dataset, debug=False,
+            args.eval_method, dataset, debug=args.debug,
         )
         metrics = {
             "average_metrics": average_metrics,
@@ -321,7 +336,7 @@ if __name__ == "__main__":
     if (not exists(metrics_path)) or args.ignore_cache:
         print_update("Computing metrics for image-to-text grounding")
         average_metrics, instance_level_metrics, entry_level_metrics = evaluate_image_to_text(
-            args.eval_method, dataset, debug=False,
+            args.eval_method, dataset, debug=args.debug,
         )
         
         torch.save(

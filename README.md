@@ -45,14 +45,33 @@ In order to reproduce our results of CLIP model on Panoptic Narrative Grounding 
     export PYTHONPATH=$PWD
     ```
 * Run the evaluation script:
-    ```sh
-    python clip_grounding/evaluation/clip_on_png.py
-    ```
-    This shall save metrics in `outputs/` folder as well as print the results in the following form.
-    ```console
-    TEXT2IMAGE METRICS: {'iou': 0.4892}
-    IMAGE2TEXT METRICS: {'iou': 0.5015}
-    ```
+
+**CLIP (multi-modal)**: To run evaluation with CLIP using both modes, run
+```sh
+python clip_grounding/evaluation/clip_on_png.py --eval_method clip
+```
+This shall save metrics in `outputs/` folder as well as print the results in the following form.
+```console
+TEXT2IMAGE METRICS: {'iou': 0.4892}
+IMAGE2TEXT METRICS: {'iou': 0.5015}
+```
+
+**CLIP (unimodal)**: To run a stronger baseline using only one modality in CLIP, run
+```sh
+python clip_grounding/evaluation/clip_on_png.py --eval_method clip-unimodal
+```
+
+**Random baseline**: To run baseline evaluation (with random attributions), run
+```sh
+python clip_grounding/evaluation/clip_on_png.py --eval_method random
+```
+
+The cross-modal grounding results for different variants are summarized in the following table:
+
+|                     | Random | CLIP-Unimodal | CLIP   |
+|---------------------|--------|---------------|--------|
+| Text-to-Image (IoU) | 0.2763 |               | 0.4917 |
+| Image-to-Text (IoU) | 0.2557 |               | 0.5099 |
 
 
 ## Appendix
