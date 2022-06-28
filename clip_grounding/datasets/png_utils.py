@@ -83,7 +83,15 @@ def show_image_and_caption(image: Image, caption_phrases: list, colors: list = N
     plt.show()
 
 
-def show_images_and_caption(images: List, caption_phrases: list, colors: list = None, figsize=None, show=False):
+def show_images_and_caption(
+        images: List,
+        caption_phrases: list,
+        colors: list = None,
+        image_xlabels: List=[],
+        figsize=None,
+        show=False,
+        xlabelsize=14,
+    ):
 
     if colors is None:
         colors = ["black" for _ in range(len(caption_phrases))]
@@ -91,6 +99,9 @@ def show_images_and_caption(images: List, caption_phrases: list, colors: list = 
 
     if figsize is None:
         figsize = (5 * len(images) + 8, 4)
+    
+    if image_xlabels is None:
+        image_xlabels = ["" for _ in range(len(images))]
 
     fig, axes = plt.subplots(1, len(images) + 1, figsize=figsize)
 
@@ -99,6 +110,7 @@ def show_images_and_caption(images: List, caption_phrases: list, colors: list = 
         ax.imshow(image)
         ax.set_xticks([])
         ax.set_yticks([])
+        ax.set_xlabel(image_xlabels[i], fontsize=xlabelsize)
 
     ax = axes[-1]
     utt_per_line, col_per_line = split_caption_phrases(caption_phrases, colors, max_char_in_a_line=50)
