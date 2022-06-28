@@ -118,7 +118,7 @@ The cross-modal grounding results for different variants are summarized in the f
 
 ## Acknowledgements
 
-We'd like to thank the TAs, in particular, Jaap Jumelet for useful initial discussions, and the course instructor Prof. Jelle Zuidema.
+We'd like to thank the TAs, in particular, [Jaap Jumelet](https://jumelet.ai/) for useful initial discussions, and the course instructor [Prof. Jelle Zuidema](https://staff.fnwi.uva.nl/w.zuidema/).
 
 We greatly appreciate the open-sourced code and datasets for the following resources:
 * [Panoptic Narrative Grounding](https://bcv-uniandes.github.io/panoptic-narrative-grounding/)
