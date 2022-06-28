@@ -74,11 +74,10 @@ The cross-modal grounding results for different variants are summarized in the f
 
 <center>
 
-
 |                     | Random | CLIP-Unimodal | CLIP   |
 |---------------------|--------|---------------|--------|
-| Text-to-Image (IoU) | 0.2763 |               | 0.4917 |
-| Image-to-Text (IoU) | 0.2557 |               | 0.5099 |
+| Text-to-Image (IoU) | 0.2763 |     0.4310    | 0.4917 |
+| Image-to-Text (IoU) | 0.2557 |     0.4570    | 0.5099 |
 
 </center>
 
