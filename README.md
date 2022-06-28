@@ -1,6 +1,8 @@
 # CLIP-grounding
 Quantitative evaluation of CLIP's interpretability in terms of cross-modal grounding.
 
+![Sample qualitative result](./media/sample.gif)
+
 ## Abstract
 
 ## Setup
