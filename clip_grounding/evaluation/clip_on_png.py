@@ -81,7 +81,7 @@ def apply_otsu_threshold(relevance_map):
     return otsu_map
 
 
-def evaluate_text_to_image(dataset, debug=False):
+def evaluate_text_to_image(method, dataset, debug=False):
 
     instance_level_metrics = defaultdict(list)
     entry_level_metrics = defaultdict(list)
@@ -99,16 +99,22 @@ def evaluate_text_to_image(dataset, debug=False):
         
         instance_iou = 0.
         for entry in instance:
+            
             # preprocess the image and text
             test_img, test_texts, orig_image = process_entry_text_to_image(entry)
-            
-            # compute the relevance scores 
-            outputs = interpret_and_generate(model, test_img, test_texts, orig_image, return_outputs=True, show=False)
-            
-            # use the image relevance score to compute IoU w.r.t. ground truth segmentation masks
 
-            # NOTE: since we pass single entry (1-sized batch), outputs[0] contains our reqd outputs
-            relevance_map = outputs[0]["image_relevance"]
+            if method == "clip":
+                
+                # compute the relevance scores 
+                outputs = interpret_and_generate(model, test_img, test_texts, orig_image, return_outputs=True, show=False)
+                
+                # use the image relevance score to compute IoU w.r.t. ground truth segmentation masks
+
+                # NOTE: since we pass single entry (1-sized batch), outputs[0] contains our reqd outputs
+                relevance_map = outputs[0]["image_relevance"]
+            elif method == "random":
+                relevance_map = np.random.uniform(low=0., high=1., size=tuple(test_img.shape[2:]))
+                
             otsu_relevance_map = apply_otsu_threshold(relevance_map)
             
             ground_truth_mask = entry["image_mask"]
@@ -168,7 +174,7 @@ def process_text_mask(text, text_mask, tokens):
     return token_level_mask
 
 
-def evaluate_image_to_text(dataset, debug=False, clamp_sentence_len=70):
+def evaluate_image_to_text(method, dataset, debug=False, clamp_sentence_len=70):
 
     instance_level_metrics = defaultdict(list)
     entry_level_metrics = defaultdict(list)
@@ -202,16 +208,29 @@ def evaluate_image_to_text(dataset, debug=False, clamp_sentence_len=70):
                 continue
             
             # compute the relevance scores 
-            try:
-                outputs = interpret_and_generate(model, img, texts, orig_image, return_outputs=True, show=False)
-            except:
-                num_entries_skipped += 1
-                continue
+            if method == "clip":
+                try:
+                    outputs = interpret_and_generate(model, img, texts, orig_image, return_outputs=True, show=False)
+                except:
+                    num_entries_skipped += 1
+                    continue
+            elif method == "random":
+                text = texts[0]
+                text_tokens = _tokenizer.encode(text)
+                text_tokens_decoded=[_tokenizer.decode([a]) for a in text_tokens]
+                outputs = [
+                    {
+                        "text_scores": np.random.uniform(low=0., high=1., size=len(text_tokens_decoded)),
+                        "tokens_decoded": text_tokens_decoded,
+                    }
+                ]
             
             # use the text relevance score to compute IoU w.r.t. ground truth text masks
             # NOTE: since we pass single entry (1-sized batch), outputs[0] contains our reqd outputs
             token_relevance_scores = outputs[0]["text_scores"]
-            token_relevance_scores = apply_otsu_threshold(token_relevance_scores.numpy())
+            if isinstance(token_relevance_scores, torch.Tensor):
+                token_relevance_scores = token_relevance_scores.cpu().numpy()
+            token_relevance_scores = apply_otsu_threshold(token_relevance_scores)
             token_ground_truth_mask = process_text_mask(entry["text"], entry["text_mask"], outputs[0]["tokens_decoded"])
             
             entry_iou = jaccard_image_to_text(
@@ -237,6 +256,21 @@ def evaluate_image_to_text(dataset, debug=False, clamp_sentence_len=70):
 
 
 if __name__ == "__main__":
+    
+    import argparse
+    parser = argparse.ArgumentParser("Evaluate Image-to-Text & Text-to-Image model")
+    parser.add_argument(
+        "--eval_method", type=str, default="clip",
+        choices=["clip", "random"],
+        help="Evaluation method to use",
+    )
+    parser.add_argument(
+        "--ignore_cache", action="store_true",
+        help="Ignore cache and force re-generation of the results",
+    )
+    args = parser.parse_args()
+    
+    
     clip.clip._MODELS = {
         "ViT-B/32": "https://openaipublic.azureedge.net/clip/models/40d365715913c9da98579312b702a82c18be219cc2a73407c4526f58eba950af/ViT-B-32.pt",
         "ViT-B/16": "https://openaipublic.azureedge.net/clip/models/5806e77cd80f8b59890b7e101eabd078d9fb84e6937f9e85e4ecb61988df416f/ViT-B-16.pt",
@@ -260,11 +294,13 @@ if __name__ == "__main__":
     # save metrics
     metrics_dir = join(REPO_PATH, "outputs")
     os.makedirs(metrics_dir, exist_ok=True)
-    metrics_path = join(metrics_dir, f"{type(model).__name__}_on_{type(dataset).__name__}_text2image_metrics.pt")
 
-    if not exists(metrics_path):
+    metrics_path = join(metrics_dir, f"{args.eval_method}_on_{type(dataset).__name__}_text2image_metrics.pt")
+    if (not exists(metrics_path)) or args.ignore_cache:
         print_update("Computing metrics for text-to-image grounding")
-        average_metrics, instance_level_metrics, entry_level_metrics = evaluate_text_to_image(dataset, debug=False)
+        average_metrics, instance_level_metrics, entry_level_metrics = evaluate_text_to_image(
+            args.eval_method, dataset, debug=False,
+        )
         metrics = {
             "average_metrics": average_metrics,
             "instance_level_metrics":instance_level_metrics,
@@ -281,10 +317,12 @@ if __name__ == "__main__":
 
     print()
     
-    metrics_path = join(metrics_dir, f"{type(model).__name__}_on_{type(dataset).__name__}_image2text_metrics.pt")
-    if not exists(metrics_path):
+    metrics_path = join(metrics_dir, f"{args.eval_method}_on_{type(dataset).__name__}_image2text_metrics.pt")
+    if (not exists(metrics_path)) or args.ignore_cache:
         print_update("Computing metrics for image-to-text grounding")
-        average_metrics, instance_level_metrics, entry_level_metrics = evaluate_image_to_text(dataset, debug=False)
+        average_metrics, instance_level_metrics, entry_level_metrics = evaluate_image_to_text(
+            args.eval_method, dataset, debug=False,
+        )
         
         torch.save(
             {
