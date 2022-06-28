@@ -2,6 +2,7 @@
 data/
 __MACOSX/
 *metrics.pt
+figures/**/*.png
 
 
 # Byte-compiled / optimized / DLL files

@@ -1,4 +1,5 @@
 """Image operations."""
+from copy import deepcopy
 from PIL import Image
 
 
@@ -19,6 +20,7 @@ def center_crop(im: Image):
 
 
 def pad_to_square(im: Image, color=(0, 0, 0)):
+    im = deepcopy(im)
     width, height = im.size
 
     vert_pad = (max(width, height) - height) // 2

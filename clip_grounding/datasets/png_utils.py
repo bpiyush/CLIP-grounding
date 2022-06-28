@@ -2,6 +2,7 @@
 
 import os
 from os.path import join, isdir, exists
+from typing import List
 
 import torch
 from PIL import Image
@@ -82,3 +83,40 @@ def show_image_and_caption(image: Image, caption_phrases: list, colors: list = N
     plt.show()
 
 
+def show_images_and_caption(images: List, caption_phrases: list, colors: list = None, figsize=None, show=False):
+
+    if colors is None:
+        colors = ["black" for _ in range(len(caption_phrases))]
+    caption_phrases[0] = caption_phrases[0].capitalize()
+
+    if figsize is None:
+        figsize = (5 * len(images) + 8, 4)
+
+    fig, axes = plt.subplots(1, len(images) + 1, figsize=figsize)
+
+    for i, image in enumerate(images):
+        ax = axes[i]
+        ax.imshow(image)
+        ax.set_xticks([])
+        ax.set_yticks([])
+
+    ax = axes[-1]
+    utt_per_line, col_per_line = split_caption_phrases(caption_phrases, colors, max_char_in_a_line=50)
+    y = 0.7
+    for U, C in zip(utt_per_line, col_per_line):
+        rainbow_text(
+            0., y,
+            U,
+            C,
+            size=15, ax=ax, fig=fig,
+            horizontalalignment='left',
+            verticalalignment='center',
+        )
+        y -= 0.11
+
+    ax.axis("off")
+
+    fig.tight_layout()
+    
+    if show:
+        plt.show()

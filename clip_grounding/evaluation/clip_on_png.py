@@ -29,6 +29,13 @@ from clip_grounding.utils.visualize import show_grid_of_images
 from clip_grounding.utils.log import tqdm_iterator, print_update
 
 
+# global usage
+# specify device
+device = "cuda" if torch.cuda.is_available() else "cpu"
+
+# load CLIP model
+model, preprocess = clip.load("ViT-B/32", device=device, jit=False)
+
 
 def show_cam(mask):
     heatmap = cv2.applyColorMap(np.uint8(255 * mask), cv2.COLORMAP_JET)

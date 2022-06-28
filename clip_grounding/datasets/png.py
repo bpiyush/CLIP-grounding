@@ -9,6 +9,7 @@ from os.path import join, isdir, exists
 
 import torch
 from torch.utils.data import Dataset
+import cv2
 from PIL import Image
 from skimage import io
 import numpy as np
@@ -158,6 +159,41 @@ class PNG(Dataset):
             # show_image_and_caption(image_with_segmap, utterances, colors)
 
         return outputs
+
+
+def overlay_segmask_on_image(image, image_mask, segment_color="red"):
+    segmap = SegmentationMapsOnImage(
+        image_mask.astype(np.uint8), shape=image_mask.shape,
+    )
+    rgb_color = mc.to_rgb(segment_color)
+    rgb_color = 255 * np.array(rgb_color)
+    image_with_segmap = segmap.draw_on_image(np.asarray(image), colors=[0, rgb_color])[0]
+    image_with_segmap = Image.fromarray(image_with_segmap)
+    return image_with_segmap
+
+
+def get_text_colors(text, text_mask, segment_color="red"):
+    colors = ["black" for _ in range(len(text))]
+    colors[text_mask.nonzero()[0][0]] = segment_color
+    return colors
+
+
+def overlay_relevance_map_on_image(image, heatmap):
+    width, height = image.size
+
+    # resize the heatmap to image size
+    heatmap = cv2.resize(heatmap, (width, height))
+    heatmap = np.uint8(255 * heatmap)
+    heatmap = cv2.applyColorMap(heatmap, cv2.COLORMAP_JET)
+    heatmap = cv2.cvtColor(heatmap, cv2.COLOR_BGR2RGB)
+
+    # create overlapped super image
+    img = np.asarray(image)
+    super_img = heatmap * 0.4 + img * 0.6
+    super_img = np.uint8(super_img)
+    super_img = Image.fromarray(super_img)
+    
+    return super_img
 
 
 def visualize_item(image, text, image_mask, text_mask, segment_color="red"):
