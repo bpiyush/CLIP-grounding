@@ -68,10 +68,15 @@ python clip_grounding/evaluation/clip_on_png.py --eval_method random
 
 The cross-modal grounding results for different variants are summarized in the following table:
 
+<center>
+
+
 |                     | Random | CLIP-Unimodal | CLIP   |
 |---------------------|--------|---------------|--------|
 | Text-to-Image (IoU) | 0.2763 |               | 0.4917 |
 | Image-to-Text (IoU) | 0.2557 |               | 0.5099 |
+
+</center>
 
 
 ## Appendix
