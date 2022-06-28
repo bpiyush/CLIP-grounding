@@ -39,7 +39,9 @@ data/panoptic_narrative_grounding
 
 ## Demo
 
-:date:  Coming soon!
+<!-- :date:  Coming soon! -->
+
+In order to run our code on samples from the PNG benchmark dataset, please run [this notebook](./notebooks/qualitative_results.ipynb). It assumes that you have a `conda` environment setup as before and the dataset downloaded.
 
 
 ## Quantitative evaluation
