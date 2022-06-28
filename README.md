@@ -50,11 +50,11 @@ In order to reproduce our results of CLIP model on Panoptic Narrative Grounding 
 ```sh
 python clip_grounding/evaluation/clip_on_png.py --eval_method clip
 ```
-This shall save metrics in `outputs/` folder as well as print the results in the following form.
-```console
+This shall save metrics in `outputs/` folder. Result (numbers) are presented below.
+<!-- ```console
 TEXT2IMAGE METRICS: {'iou': 0.4892}
 IMAGE2TEXT METRICS: {'iou': 0.5015}
-```
+``` -->
 
 **CLIP (unimodal)**: To run a stronger baseline using only one modality in CLIP, run
 ```sh
