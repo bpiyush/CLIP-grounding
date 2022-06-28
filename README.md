@@ -10,25 +10,28 @@ Follow the steps provided [here](./setup/README.md) to create a `conda` envirome
 ## Dataset
 
 Download the MSCOCO dataset (only validation images are required for this work) and its panoptic segmentation annotations by running:
-    ```console
-    bash setup/download_mscoco.sh
-    ```
 
-    This shall result in the following folder structure:
-    ```zsh
-    data/panoptic_narrative_grounding
-    ├── __MACOSX
-    │   └── panoptic_val2017
-    ├── annotations
-    │   ├── panoptic_segmentation
-    │   ├── panoptic_train2017.json
-    │   ├── panoptic_val2017.json
-    │   └── png_coco_val2017.json
-    └── images
-        └── val2017
+```zsh
+bash setup/download_mscoco.sh
+```
 
-    6 directories, 3 files
-    ```
+This shall result in the following folder structure:
+
+```zsh
+data/panoptic_narrative_grounding
+├── __MACOSX
+│   └── panoptic_val2017
+├── annotations
+│   ├── panoptic_segmentation
+│   ├── panoptic_train2017.json
+│   ├── panoptic_val2017.json
+│   └── png_coco_val2017.json
+└── images
+    └── val2017
+
+6 directories, 3 files
+```
+
 <!-- 2. (Optional) Pre-process the data as instructed in the [official panoptic narrative grounding repo](https://github.com/BCV-Uniandes/PNG). See [Appendix A](#appA) for sample instructions to run this on a Mac CPU machine. This shall create `data/panoptic_narrative_grounding/annotations/png_coco_val2017_dataloader.json` file. Note that we run this step only for `val2017` split and not the training set. -->
 
 
