@@ -120,7 +120,7 @@ def show_images_and_caption(
             0., y,
             U,
             C,
-            size=23, ax=ax, fig=fig,
+            size=20, ax=ax, fig=fig,
             horizontalalignment='left',
             verticalalignment='center',
             # weight='bold'
