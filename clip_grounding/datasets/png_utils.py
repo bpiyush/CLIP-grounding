@@ -113,16 +113,17 @@ def show_images_and_caption(
         ax.set_xlabel(image_xlabels[i], fontsize=xlabelsize)
 
     ax = axes[-1]
-    utt_per_line, col_per_line = split_caption_phrases(caption_phrases, colors, max_char_in_a_line=50)
+    utt_per_line, col_per_line = split_caption_phrases(caption_phrases, colors, max_char_in_a_line=40)
     y = 0.7
     for U, C in zip(utt_per_line, col_per_line):
         rainbow_text(
             0., y,
             U,
             C,
-            size=15, ax=ax, fig=fig,
+            size=23, ax=ax, fig=fig,
             horizontalalignment='left',
             verticalalignment='center',
+            # weight='bold'
         )
         y -= 0.11
 

@@ -4,6 +4,7 @@ __MACOSX/
 *metrics.pt
 figures/**/*.png
 figures/**/*.svg
+figures/instance-*/*.pdf
 .DS_Store
 
 
