@@ -3,6 +3,8 @@ data/
 __MACOSX/
 *metrics.pt
 figures/**/*.png
+figures/**/*.svg
+.DS_Store
 
 
 # Byte-compiled / optimized / DLL files
