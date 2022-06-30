@@ -24,3 +24,7 @@
     cd CLIP_explainability/
     git clone https://github.com/hila-chefer/Transformer-MM-Explainability.git
     ```
+4. Set the `PYTHONPATH` from the root of the repo.
+    ```sh
+    export PYTHONPATH=$PWD
+    ```

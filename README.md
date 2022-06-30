@@ -5,6 +5,10 @@ Quantitative evaluation of CLIP's interpretability in terms of cross-modal groun
 
 ## Abstract
 
+Powerful multimodal models such as CLIP combine vision and language to reliably align image-text pairs. However, it is unclear if CLIP focuses on the *right signals* while aligning images and text. To answer this, we leverage a state-of-the-art attention-explainability method called [Transformer-MM-Explainability](https://github.com/hila-chefer/Transformer-MM-Explainability) and quantify how well CLIP grounds lingusitic concepts in images and visual concepts in text.
+
+Towards this, we use the [Panoptic Narrative Grounding](https://bcv-uniandes.github.io/panoptic-narrative-grounding/) benchmark proposed by Gonzalez et al. that provides fine-grained segmentation masks corresponding to the parts of sentences.
+
 ## Setup
 
 Follow the steps provided [here](./setup/README.md) to create a `conda` enviroment and activate it.
@@ -33,6 +37,7 @@ data/panoptic_narrative_grounding
 
 6 directories, 3 files
 ```
+:hourglass: This step takes about 30 minutes (depending on your Internet connection).
 
 <!-- 2. (Optional) Pre-process the data as instructed in the [official panoptic narrative grounding repo](https://github.com/BCV-Uniandes/PNG). See [Appendix A](#appA) for sample instructions to run this on a Mac CPU machine. This shall create `data/panoptic_narrative_grounding/annotations/png_coco_val2017_dataloader.json` file. Note that we run this step only for `val2017` split and not the training set. -->
 
@@ -43,6 +48,7 @@ data/panoptic_narrative_grounding
 
 In order to run our code on samples from the PNG benchmark dataset, please run [this notebook](./notebooks/qualitative_results.ipynb). It assumes that you have a `conda` environment setup as before and the dataset downloaded.
 
+:date: A Gradio demo coming soon!
 
 ## Quantitative evaluation
 
