@@ -138,4 +138,4 @@ We greatly appreciate the open-sourced code/datasets/models from the following r
 * [Panoptic Narrative Grounding](https://bcv-uniandes.github.io/panoptic-narrative-grounding/)
 * [MS-COCO](https://cocodataset.org/#download)
 * [CLIP](https://github.com/openai/CLIP) by OpenAI
-* [Tramsformer multi-modal Explanability](https://github.com/hila-chefer/Transformer-MM-Explainability) by Hila Chefer et al.
+* [Tramsformer multi-modal Explanability](https://github.com/hila-chefer/Transformer-MM-Explainability) by [Hila Chefer](https://github.com/hila-chefer) et al.
