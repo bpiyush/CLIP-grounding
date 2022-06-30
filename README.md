@@ -1,5 +1,5 @@
 # CLIP-grounding
-Quantitative evaluation of CLIP's interpretability in terms of cross-modal grounding.
+Quantitative evaluation of CLIP's cross-modal grounding abilities via attention-explainability method.
 
 ![Sample qualitative result](./media/sample.gif)
 
