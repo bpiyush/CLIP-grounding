@@ -48,7 +48,9 @@ data/panoptic_narrative_grounding
 
 In order to run our code on samples from the PNG benchmark dataset, please run [this notebook](./notebooks/qualitative_results.ipynb). It assumes that you have a `conda` environment setup as before and the dataset downloaded.
 
-:date: A Gradio demo coming soon!
+<!-- :date: A Gradio demo coming soon! -->
+
+:hugs: Check out a Huggingface spaces demo [here](https://huggingface.co/spaces/PaulHilders/CLIPGroundingExplainability).
 
 ## Quantitative evaluation
 
