@@ -54,7 +54,7 @@ In order to run our code on samples from the PNG benchmark dataset, please run [
 
 <!-- :date: A Gradio demo coming soon! -->
 
-:hugs: Check out a Huggingface spaces demo [here](https://huggingface.co/spaces/PaulHilders/CLIPGroundingExplainability).
+:hugs: Alternatively, check out a Huggingface spaces demo [here](https://huggingface.co/spaces/PaulHilders/CLIPGroundingExplainability).
 
 ## Quantitative evaluation
 
